@@ -11,15 +11,25 @@ Galil::Galil() {
 }
 
 Galil::Galil(EmbeddedFunctions* Funcs, GCStringIn address) {
-
+	g = 0;
+	Functions = Funcs;
+	memset(ReadBuffer, 0, sizeof(ReadBuffer)); //clear buffer
+	ControlParameters[0] = 0;
+	ControlParameters[1] = 0;
+	ControlParameters[2] = 0;
+	setPoint = 0;
+	Functions->GOpen(address, &g);
 }
 
 Galil::~Galil() {
-
+	Functions->GClose(g);
 }
 
+// Write to all 16 bits of digital output, 1 command to the Galil
 void Galil::DigitalOutput(uint16_t value){
 
+
+	
 }
 
 // Write to one byte, either high or low byte, as specified by user in 'bank'
