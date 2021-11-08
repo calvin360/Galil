@@ -28,10 +28,14 @@ Galil::~Galil() {
 // Write to all 16 bits of digital output, 1 command to the Galil
 void Galil::DigitalOutput(uint16_t value){
 	memset(ReadBuffer, 0, sizeof(ReadBuffer));
-	char command[64] = "";
+	char command[128] = "";
 	int high = value & 0xFF00;
+	//std::cout << "high:" << high << std::endl;
 	int low = value & 0xFF;
+	high >>= 8;
+	std::cout << "high:" << high << std::endl;
 	sprintf_s(command, "OP %d %d;", low, high);
+	std::cout << "low:" << low << std::endl;
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	CheckSuccessfulWrite();
 	
