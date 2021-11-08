@@ -111,7 +111,7 @@ uint8_t Galil::DigitalByteInput(bool bank) {
 // Read single bit from current digital inputs. Above functions
 // may use this function
 bool Galil::DigitalBitInput(uint8_t bit) {
-
+	return 0;
 }
 // Check the string response from the Galil to check that the last 
 // command executed correctly. 1 = succesful. NOT AUTOMARKED
@@ -129,6 +129,7 @@ bool Galil::CheckSuccessfulWrite() {
 // Read Analog channel and return voltage			
 float Galil::AnalogInput(uint8_t channel) {
 
+	return 0;
 }
 
 // Write to any channel of the Galil, send voltages as
@@ -149,6 +150,7 @@ void Galil::WriteEncoder() {
 // Read from Encoder
 int Galil::ReadEncoder() {
 
+	return 0;
 }
 // Set the desired setpoint for control loops, counts or counts/sec
 void Galil::setSetPoint(int s) {
@@ -166,19 +168,10 @@ void Galil::setKi(double gain) {
 void Galil::setKd(double gain) {
 
 }
-// Run the control loop. ReadEncoder() is the input to the loop. The motor is the output.
-// The loop will run using the PID values specified in the data of this object, and has an 
-// automatic timeout of 10s. You do not need to implement this function, it is defined in
-// GalilControl.lib
-void Galil::PositionControl(bool debug, int Motorchannel) {
 
-}
-// same as above. Setpoint interpreted as counts per second
-void Galil::SpeedControl(bool debug, int Motorchannel) {
-
-}
 // Operator overload for '<<' operator. So the user can say cout << Galil; This function should print out the
 // output of GInfo and GVersion, with two newLines after each.
 std::ostream& operator<<(std::ostream& output, Galil& galil) {
 
+	return output;
 }

@@ -92,7 +92,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\header files</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies />
+      <AdditionalDependencies>GalilControl_Win32_Debug.lib;GalilControl_Win32_Release.lib;GalilControl_x64_Debug.lib;GalilControl_x64_Release.lib;gclib.lib;gclib_64.lib;gclibo.lib;gclibo_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -103,7 +103,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\header files</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies />
+      <AdditionalDependencies>GalilControl_Win32_Debug.lib;GalilControl_Win32_Release.lib;GalilControl_x64_Debug.lib;GalilControl_x64_Release.lib;gclib.lib;gclib_64.lib;gclibo.lib;gclibo_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -114,7 +114,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\header files</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies />
+      <AdditionalDependencies>GalilControl_Win32_Debug.lib;GalilControl_Win32_Release.lib;GalilControl_x64_Debug.lib;GalilControl_x64_Release.lib;gclib.lib;gclib_64.lib;gclibo.lib;gclibo_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -125,12 +125,13 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\header files</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies />
+      <AdditionalDependencies>GalilControl_Win32_Debug.lib;GalilControl_Win32_Release.lib;GalilControl_x64_Debug.lib;GalilControl_x64_Release.lib;gclib.lib;gclib_64.lib;gclibo.lib;gclibo_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="galil.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\header files\EmbeddedFunctions.h" />
