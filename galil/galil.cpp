@@ -115,7 +115,16 @@ uint8_t Galil::DigitalByteInput(bool bank) {
 // Read single bit from current digital inputs. Above functions
 // may use this function
 bool Galil::DigitalBitInput(uint8_t bit) {
-	return 0;
+	char command[128] = "";
+
+	sprintf_s(command, "MG @IN[%d];", bit);
+	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
+	int value = atoi(ReadBuffer);
+	if (value == 1) 
+		return 0;
+	else 
+		return 1;
+
 }
 // Check the string response from the Galil to check that the last 
 // command executed correctly. 1 = succesful. NOT AUTOMARKED
