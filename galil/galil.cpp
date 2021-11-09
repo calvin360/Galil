@@ -163,50 +163,87 @@ bool Galil::CheckSuccessfulWrite() {
 // ANALOG FUNCITONS
 // Read Analog channel and return voltage			
 float Galil::AnalogInput(uint8_t channel) {
+	memset(ReadBuffer, 0, sizeof(ReadBuffer));
+	char command[64] = "";
 
-	return 0;
+	sprintf_s(command, "MG @AN[%d];", channel);
+	//std::cout << command << std::endl;
+	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
+	//float value = (float)atof(ReadBuffer);
+
+	return (float)atof(ReadBuffer);
 }
 
 // Write to any channel of the Galil, send voltages as
 // 2 decimal place in the command string
 void Galil::AnalogOutput(uint8_t channel, double voltage) {
+	memset(ReadBuffer, 0, sizeof(ReadBuffer));
+	char command[64] = "";
+
+	sprintf_s(command, "AO %d, %.2lf;", channel, voltage);
+	//std::cout << command << std::endl;
+	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
+	CheckSuccessfulWrite();
 
 }
 // Configure the range of the input channel with
 // the desired range code
 void Galil::AnalogInputRange(uint8_t channel, uint8_t range) {
+	memset(ReadBuffer, 0, sizeof(ReadBuffer));
+	char command[64] = "";
 
+	sprintf_s(command, "AQ %d, %d;", channel, range);
+	//std::cout << command << std::endl;
+	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
+	CheckSuccessfulWrite();
 }
+
+
 // ENCODER / CONTROL FUNCTIONS
 // Manually Set the encoder value to zero
 void Galil::WriteEncoder() {
+	memset(ReadBuffer, 0, sizeof(ReadBuffer));	// clear ReadBuffer
+	char command[64] = "WE 0, 0;";
 
+	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
+	CheckSuccessfulWrite();
 }
 // Read from Encoder
 int Galil::ReadEncoder() {
+	char command[64] = "QE 0";
 
-	return 0;
+	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
+	//int value = atoi(ReadBuffer);
+
+	return atoi(ReadBuffer);
 }
 // Set the desired setpoint for control loops, counts or counts/sec
 void Galil::setSetPoint(int s) {
-
+	setPoint = s;
 }
 // Set the proportional gain of the controller used in controlLoop()
 void Galil::setKp(double gain) {
-
+	ControlParameters[0] = gain;
 }
 // Set the integral gain of the controller used in controlLoop()
 void Galil::setKi(double gain) {
-
+	ControlParameters[1] = gain;
 }
 // Set the derivative gain of the controller used in controlLoop()
 void Galil::setKd(double gain) {
-
+	ControlParameters[2] = gain;
 }
 
 // Operator overload for '<<' operator. So the user can say cout << Galil; This function should print out the
 // output of GInfo and GVersion, with two newLines after each.
 std::ostream& operator<<(std::ostream& output, Galil& galil) {
+	char info[64] = "";
+	char version[64] = "";
+
+	galil.Functions->GInfo(galil.g, info, sizeof(info));
+	galil.Functions->GVersion(version, sizeof(version));
+
+	output << info << "\n\n" << version << "\n" << std::endl;
 
 	return output;
 }
