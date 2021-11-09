@@ -24,14 +24,14 @@ int main() {
 	std::cout << "connected" << std::endl;
 
 	while (!_kbhit()) {
-		galil.DigitalOutput(0xff00);
-		int x=galil.DigitalInput();
+		galil.AnalogOutput(0,5);
+		int x=galil.AnalogInput(0);
 		std::cout <<"high: "<< x << std::endl;
-		Sleep(1000);
-		galil.DigitalOutput(0);
-		x = galil.DigitalInput();
+		Sleep(3000);
+		galil.AnalogOutput(0, 0);
+		x = galil.AnalogInput(0);
 		std::cout <<"low: "<< x << std::endl;
-		Sleep(1000);
+		Sleep(3000);
 	}
 	return 0;
 }
