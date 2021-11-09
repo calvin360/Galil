@@ -1,5 +1,6 @@
 #include "Galil.h"
 
+//done
 Galil::Galil() {
 	g = 0;
 	memset(ReadBuffer, 0, sizeof(ReadBuffer)); //clear buffer
@@ -10,6 +11,7 @@ Galil::Galil() {
 	Functions->GOpen("192.168.1.120 -d", &g);
 }
 
+//done
 Galil::Galil(EmbeddedFunctions* Funcs, GCStringIn address) {
 	g = 0;
 	Functions = Funcs;
@@ -21,26 +23,27 @@ Galil::Galil(EmbeddedFunctions* Funcs, GCStringIn address) {
 	Functions->GOpen(address, &g);
 }
 
+//done
 Galil::~Galil() {
 	Functions->GClose(g);
 }
 
+//------------------------------------------------------------------------------//
+//done
+// DIGITAL OUTPUTS
 // Write to all 16 bits of digital output, 1 command to the Galil
 void Galil::DigitalOutput(uint16_t value){
 	memset(ReadBuffer, 0, sizeof(ReadBuffer));
 	char command[128] = "";
 	int high = value & 0xFF00;
-	//std::cout << "high:" << high << std::endl;
 	int low = value & 0xFF;
 	high >>= 8;
-	std::cout << "high:" << high << std::endl;
-	sprintf_s(command, "OP %d %d;", low, high);
-	std::cout << "low:" << low << std::endl;
+	sprintf_s(command, "OP %d, %d;", low, high);
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	CheckSuccessfulWrite();
-	
 }
 
+//done
 // Write to one byte, either high or low byte, as specified by user in 'bank'
 // 0 = low, 1 = high
 void Galil::DigitalByteOutput(bool bank, uint8_t value) {
@@ -53,27 +56,31 @@ void Galil::DigitalByteOutput(bool bank, uint8_t value) {
 		high = value;
 	else
 		low = value;
-	sprintf_s(command, "OP %d %d;", low, high);
+	sprintf_s(command, "OP %d, %d;", low, high);
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	CheckSuccessfulWrite();
 }
 
+//done
 // Write single bit to digital outputs. 'bit' specifies which bit
 void Galil::DigitalBitOutput(bool val, uint8_t bit) {
 	memset(ReadBuffer, 0, sizeof(ReadBuffer));
 	char command[64] = "";
-
 	int value = val;
+
 	for (int i = 0; i < bit; i++) {
 		value <<= 1;
 	}
 	int high = value & 0xFF00;
+	high >>= 8;
 	int low = value & 0xFF;
-	sprintf_s(command, "OP %d %d;", low, high);
+	sprintf_s(command, "OP %d, %d;", low, high);
+	//std::cout << command << std::endl;
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	CheckSuccessfulWrite();
 }
 
+//--------------------------------------------------------------------------//
 // DIGITAL INPUTS
 // Return the 16 bits of input data
 // Query the digital inputs of the GALIL, See Galil command library @IN
@@ -81,10 +88,10 @@ uint16_t Galil::DigitalInput() {
 	int bit = 15;
 	uint16_t value = 0;
 
-	if (DigitalBitInput(bit)) {
-		value |= 1;
-		bit--;
-	}
+	//if (DigitalBitInput(bit)) {
+	//	value |= 1;
+	//	bit--;
+	//}
 	for (int i = 0; i < 15; i++) {
 		if (DigitalBitInput(bit))
 			value |= 1;
@@ -93,6 +100,7 @@ uint16_t Galil::DigitalInput() {
 	}
 	return value;
 }
+
 // Read either high or low byte, as specified by user in 'bank'
 // 0 = low, 1 = high
 uint8_t Galil::DigitalByteInput(bool bank) {
@@ -121,21 +129,23 @@ bool Galil::DigitalBitInput(uint8_t bit) {
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	int value = atoi(ReadBuffer);
 	if (value == 1) 
-		return 0;
-	else 
 		return 1;
+	else 
+		return 0;
 
 }
 // Check the string response from the Galil to check that the last 
 // command executed correctly. 1 = succesful. NOT AUTOMARKED
 bool Galil::CheckSuccessfulWrite() {
 	char check = ReadBuffer[0];
+	//std::cout << ReadBuffer << std::endl;
 	if (check != ':') {
 		std::cout << "bad write" << std::endl;
 		std::cout << ReadBuffer << std::endl;
 		return false;
 	}
 	std::cout << "good write" << std::endl;
+	//std::cout << ReadBuffer << std::endl;
 	return true;	
 }
 // ANALOG FUNCITONS

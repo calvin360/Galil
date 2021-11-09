@@ -24,11 +24,12 @@ int main() {
 	std::cout << "connected" << std::endl;
 
 	while (!_kbhit()) {
-		galil.DigitalOutput(0xfe);
-		//std::cout << "high" << std::endl;
+		galil.DigitalOutput(0xffff);
+		//galil.DigitalInput();
+		std::cout <<"high: "<< galil.DigitalInput() << std::endl;
 		Sleep(1000);
 		galil.DigitalOutput(0);
-		//std::cout << "low" << std::endl;
+		std::cout <<"low: "<< galil.DigitalInput() << std::endl;
 		Sleep(1000);
 	}
 	return 0;
