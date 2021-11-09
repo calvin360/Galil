@@ -23,14 +23,16 @@ int main() {
 	std::cout << "connected" << std::endl;
 
 	while (!_kbhit()) {
-		g.DigitalOutput(2356);
-		double x=g.DigitalByteInput(0);
-		std::cout << "high: " << x << std::endl;
-		Sleep(1000);
-		g.DigitalOutput(0);
-		x = g.DigitalByteInput(0);
-		std::cout << "low: " << x << std::endl;
-		Sleep(1000);
+		//g.DigitalOutput(2356);
+		//double x=g.DigitalByteInput(0);
+		//std::cout << "high: " << x << std::endl;
+		//Sleep(1000);
+		//g.DigitalOutput(0);
+		//x = g.DigitalByteInput(0);
+		//std::cout << "low: " << x << std::endl;
+		//Sleep(1000);
+		std::cout << g;
+		Sleep(100);
 	}
 	return 0;
 }

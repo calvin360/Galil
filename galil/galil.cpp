@@ -248,7 +248,10 @@ std::ostream& operator<<(std::ostream& output, Galil& galil) {
 	galil.Functions->GInfo(galil.g, info, sizeof(info));
 	galil.Functions->GVersion(version, sizeof(version));
 
-	output << info << "\n\n" << version << "\n" << std::endl;
+	output << info << std::endl;
+	output << "\n" << std::endl;
+	output << version << std::endl;
+	output << "\n" << std::endl;
 
 	return output;
 }
