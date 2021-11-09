@@ -36,6 +36,11 @@ void Galil::DigitalOutput(uint16_t value){
 	memset(ReadBuffer, 0, sizeof(ReadBuffer));
 	char command[128] = "";
 	int high = value & 0xFF00;
+	if (high > 0xFF) {
+		int temp = ~high;
+		sprintf_s(command, "IQ %d;", temp);
+		Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
+	}
 	int low = value & 0xFF;
 	high >>= 8;
 	sprintf_s(command, "OP %d, %d;", low, high);
@@ -82,44 +87,47 @@ void Galil::DigitalBitOutput(bool val, uint8_t bit) {
 
 //--------------------------------------------------------------------------//
 // DIGITAL INPUTS
+
 // Return the 16 bits of input data
 // Query the digital inputs of the GALIL, See Galil command library @IN
 uint16_t Galil::DigitalInput() {
-	int bit = 15;
+	uint8_t bit = 15;
 	uint16_t value = 0;
-
-	//if (DigitalBitInput(bit)) {
-	//	value |= 1;
-	//	bit--;
-	//}
+	//std::cout << bit << std::endl;
 	for (int i = 0; i < 15; i++) {
 		if (DigitalBitInput(bit))
 			value |= 1;
 		value <<= 1;
 		bit--;
 	}
+	//for lowest bit
+	if (DigitalBitInput(0)) 
+		value |= 1;
+	
 	return value;
 }
 
 // Read either high or low byte, as specified by user in 'bank'
 // 0 = low, 1 = high
 uint8_t Galil::DigitalByteInput(bool bank) {
-	int bit = 7;
+	uint8_t bit = 7;
 	uint8_t value = 0;
 	if (bank)
 		bit = 15;
-	if (DigitalBitInput(bit)) {
-		value |= 1;
-		bit--;
-	}
 	for (int i = 0; i < 7; i++) {
 		if (DigitalBitInput(bit))
 			value |= 1;
 		value <<= 1;
 		bit--;
 	}
+	if (DigitalBitInput(0))
+		value |= 1;
+
 	return value;
 }
+
+
+//done
 // Read single bit from current digital inputs. Above functions
 // may use this function
 bool Galil::DigitalBitInput(uint8_t bit) {
@@ -128,12 +136,15 @@ bool Galil::DigitalBitInput(uint8_t bit) {
 	sprintf_s(command, "MG @IN[%d];", bit);
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	int value = atoi(ReadBuffer);
+	//std::cout <<"\t"<< value << std::endl;
 	if (value == 1) 
 		return 1;
 	else 
 		return 0;
 
 }
+
+//done
 // Check the string response from the Galil to check that the last 
 // command executed correctly. 1 = succesful. NOT AUTOMARKED
 bool Galil::CheckSuccessfulWrite() {
@@ -148,6 +159,7 @@ bool Galil::CheckSuccessfulWrite() {
 	//std::cout << ReadBuffer << std::endl;
 	return true;	
 }
+
 // ANALOG FUNCITONS
 // Read Analog channel and return voltage			
 float Galil::AnalogInput(uint8_t channel) {
