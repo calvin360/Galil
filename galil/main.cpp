@@ -16,22 +16,21 @@ using namespace System;
 using namespace System::Diagnostics;
 using namespace System::Threading;
 
-
 int main() {
 	EmbeddedFunctions f;
 	std::cout << "connecting" << std::endl;
-	Galil galil(&f,"192.168.0.120 -d");
+	Galil g(&f,"192.168.0.120 -d");
 	std::cout << "connected" << std::endl;
 
 	while (!_kbhit()) {
-		galil.AnalogOutput(0,5);
-		int x=galil.AnalogInput(0);
-		std::cout <<"high: "<< x << std::endl;
-		Sleep(3000);
-		galil.AnalogOutput(0, 0);
-		x = galil.AnalogInput(0);
-		std::cout <<"low: "<< x << std::endl;
-		Sleep(3000);
+		g.DigitalOutput(2356);
+		double x=g.DigitalByteInput(0);
+		std::cout << "high: " << x << std::endl;
+		Sleep(1000);
+		g.DigitalOutput(0);
+		x = g.DigitalByteInput(0);
+		std::cout << "low: " << x << std::endl;
+		Sleep(1000);
 	}
 	return 0;
 }

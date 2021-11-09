@@ -80,20 +80,18 @@ void Galil::DigitalBitOutput(bool val, uint8_t bit) {
 	high >>= 8;
 	int low = value & 0xFF;
 	sprintf_s(command, "OP %d, %d;", low, high);
-	//std::cout << command << std::endl;
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	CheckSuccessfulWrite();
 }
 
 //--------------------------------------------------------------------------//
 // DIGITAL INPUTS
-
+//done
 // Return the 16 bits of input data
 // Query the digital inputs of the GALIL, See Galil command library @IN
 uint16_t Galil::DigitalInput() {
 	uint8_t bit = 15;
 	uint16_t value = 0;
-	//std::cout << bit << std::endl;
 	for (int i = 0; i < 15; i++) {
 		if (DigitalBitInput(bit))
 			value |= 1;
@@ -107,6 +105,7 @@ uint16_t Galil::DigitalInput() {
 	return value;
 }
 
+//done
 // Read either high or low byte, as specified by user in 'bank'
 // 0 = low, 1 = high
 uint8_t Galil::DigitalByteInput(bool bank) {
@@ -126,7 +125,6 @@ uint8_t Galil::DigitalByteInput(bool bank) {
 	return value;
 }
 
-
 //done
 // Read single bit from current digital inputs. Above functions
 // may use this function
@@ -136,7 +134,6 @@ bool Galil::DigitalBitInput(uint8_t bit) {
 	sprintf_s(command, "MG @IN[%d];", bit);
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	int value = atoi(ReadBuffer);
-	//std::cout <<"\t"<< value << std::endl;
 	if (value == 1) 
 		return 1;
 	else 
@@ -156,24 +153,23 @@ bool Galil::CheckSuccessfulWrite() {
 		return false;
 	}
 	std::cout << "good write" << std::endl;
-	//std::cout << ReadBuffer << std::endl;
 	return true;	
 }
 
+//--------------------------------------------------------------------------//
 // ANALOG FUNCITONS
+// done
 // Read Analog channel and return voltage			
 float Galil::AnalogInput(uint8_t channel) {
 	memset(ReadBuffer, 0, sizeof(ReadBuffer));
 	char command[64] = "";
 
 	sprintf_s(command, "MG @AN[%d];", channel);
-	//std::cout << command << std::endl;
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
-	//float value = (float)atof(ReadBuffer);
-
 	return (float)atof(ReadBuffer);
 }
 
+//done
 // Write to any channel of the Galil, send voltages as
 // 2 decimal place in the command string
 void Galil::AnalogOutput(uint8_t channel, double voltage) {
@@ -181,11 +177,12 @@ void Galil::AnalogOutput(uint8_t channel, double voltage) {
 	char command[64] = "";
 
 	sprintf_s(command, "AO %d, %.2lf;", channel, voltage);
-	//std::cout << command << std::endl;
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	CheckSuccessfulWrite();
 
 }
+
+//done
 // Configure the range of the input channel with
 // the desired range code
 void Galil::AnalogInputRange(uint8_t channel, uint8_t range) {
@@ -193,12 +190,11 @@ void Galil::AnalogInputRange(uint8_t channel, uint8_t range) {
 	char command[64] = "";
 
 	sprintf_s(command, "AQ %d, %d;", channel, range);
-	//std::cout << command << std::endl;
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	CheckSuccessfulWrite();
 }
 
-
+//done
 // ENCODER / CONTROL FUNCTIONS
 // Manually Set the encoder value to zero
 void Galil::WriteEncoder() {
@@ -208,32 +204,41 @@ void Galil::WriteEncoder() {
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	CheckSuccessfulWrite();
 }
+
+//done
 // Read from Encoder
 int Galil::ReadEncoder() {
-	char command[64] = "QE 0";
+	char command[64] = "QE 0;";
 
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
-	//int value = atoi(ReadBuffer);
-
 	return atoi(ReadBuffer);
 }
+
+//done
 // Set the desired setpoint for control loops, counts or counts/sec
 void Galil::setSetPoint(int s) {
 	setPoint = s;
 }
+
+//done
 // Set the proportional gain of the controller used in controlLoop()
 void Galil::setKp(double gain) {
 	ControlParameters[0] = gain;
 }
+
+//done
 // Set the integral gain of the controller used in controlLoop()
 void Galil::setKi(double gain) {
 	ControlParameters[1] = gain;
 }
+
+//done
 // Set the derivative gain of the controller used in controlLoop()
 void Galil::setKd(double gain) {
 	ControlParameters[2] = gain;
 }
 
+//done
 // Operator overload for '<<' operator. So the user can say cout << Galil; This function should print out the
 // output of GInfo and GVersion, with two newLines after each.
 std::ostream& operator<<(std::ostream& output, Galil& galil) {
