@@ -36,11 +36,6 @@ void Galil::DigitalOutput(uint16_t value){
 	memset(ReadBuffer, 0, sizeof(ReadBuffer));
 	char command[128] = "";
 	int high = value & 0xFF00;
-	if (high > 0xFF) {
-		int temp = ~high;
-		sprintf_s(command, "IQ %d;", temp);
-		Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
-	}
 	int low = value & 0xFF;
 	high >>= 8;
 	sprintf_s(command, "OP %d, %d;", low, high);
@@ -77,8 +72,8 @@ void Galil::DigitalBitOutput(bool val, uint8_t bit) {
 		value <<= 1;
 	}
 	int high = value & 0xFF00;
-	high >>= 8;
 	int low = value & 0xFF;
+	high >>= 8;
 	sprintf_s(command, "OP %d, %d;", low, high);
 	Functions->GCommand(g, command, ReadBuffer, sizeof(ReadBuffer), 0);
 	CheckSuccessfulWrite();
@@ -100,8 +95,7 @@ uint16_t Galil::DigitalInput() {
 	}
 	//for lowest bit
 	if (DigitalBitInput(0)) 
-		value |= 1;
-	
+		value |= 1;	
 	return value;
 }
 
@@ -121,7 +115,6 @@ uint8_t Galil::DigitalByteInput(bool bank) {
 	}
 	if (DigitalBitInput(0))
 		value |= 1;
-
 	return value;
 }
 
@@ -147,13 +140,13 @@ bool Galil::DigitalBitInput(uint8_t bit) {
 bool Galil::CheckSuccessfulWrite() {
 	char check = ReadBuffer[0];
 	//std::cout << ReadBuffer << std::endl;
-	if (check != ':') {
-		std::cout << "bad write" << std::endl;
-		std::cout << ReadBuffer << std::endl;
-		return false;
+	if (check == ':') {
+		std::cout << "good write" << std::endl;
+		return true;	
 	}
-	std::cout << "good write" << std::endl;
-	return true;	
+	std::cout << "bad write" << std::endl;
+	std::cout << ReadBuffer << std::endl;
+	return false;
 }
 
 //--------------------------------------------------------------------------//
